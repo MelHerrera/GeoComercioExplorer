@@ -5,6 +5,9 @@ from pyspark.sql import SparkSession
 def HomePage(request):
     return render(request, "home.html")
 
+def Contacto(request):
+    return render(request, "contacto.html")
+
 def DashBoard(request):
     # codigoPostal = codigoPostal if codigoPostal else 10
     codigoPostal = 10

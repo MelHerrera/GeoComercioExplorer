@@ -16,13 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from GeoComercioExplorer.views import HomePage, DashBoard
+from GeoComercioExplorer.views import HomePage, DashBoard, Contacto
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', HomePage),
-    path('dashboard', DashBoard)
+    path('dashboard', DashBoard),
+    path('contacto', Contacto)
 
 ]

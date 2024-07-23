@@ -55,7 +55,7 @@ ROOT_URLCONF = 'GeoComercioExplorer.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ["C:/Users/DELL/Desktop/Semestre III/Proyecto final/GeoComercioApp/GeoComercioExplorer/GeoComercioExplorer/templates/"],
+        'DIRS': ["GeoComercioExplorer/templates/"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
