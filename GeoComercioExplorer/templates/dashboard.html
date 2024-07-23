@@ -2,7 +2,27 @@
 
 {% block content %}
 {% load static %}
- 
-<h1>Dashboard de Spark aqui</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Codigo</th>
+            <th>Latitud</th>
+            <th>Longitud</th>
+            <th>Estado</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in top_5_data %}
+            <tr>
+                <td>{{ row.d_codigo }}</td>
+                <td>{{ row.Latitud }}</td>
+                <td>{{ row.Longitud }}</td>
+                <td>{{ row.c_estado }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
 
 {% endblock %}
