@@ -8,14 +8,12 @@ def HomePage(request):
 def Contacto(request):
     return render(request, "contacto.html")
 
-def DashBoard(request):
-    # codigoPostal = codigoPostal if codigoPostal else 10
-    codigoPostal = 10
+def DashBoard(request, codigoPostal = None):
     ##instalar java https://www.oracle.com/java/technologies/downloads/?er=221886
     ##agregar java a las variables de entorno path
     ##Descargar los binarios de spark https://spark.apache.org/downloads.html
     ##agregar spark a las variables de entorno 
-    spark = SparkSession.builder.appName("GeoApp").getOrCreate()
+    spark = initSparkApp("GeoApp")
 
     data_path = "GeoComercioExplorer\content\CPdescarga.csv"
     df = spark.read.csv(data_path, header=True, inferSchema=True)
@@ -31,5 +29,5 @@ def DashBoard(request):
     # Renderizar el resultado en una plantilla
     return render(request, 'dashboard.html', {'top_5_data': top_5_data})
 
-# def initializeSpark(name):
-#     return SparkSession.builder.appName(name).getOrCreate()
+def initSparkApp(name):
+    return SparkSession.builder.appName(name).getOrCreate()

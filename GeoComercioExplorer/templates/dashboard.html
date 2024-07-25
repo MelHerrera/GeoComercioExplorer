@@ -53,24 +53,22 @@
                 <div class="row">
                     <div class="col-4">
                         <div class="form-group">
-                            <label for="exampleInputPassword1">Código Postal</label>
-                            <input type="text" class="form-control" id="exampleInputPassword1">
+                            <label for="InputCodigo" class="font-weight-bold">Código Postal</label>
+                            <input type="text" class="form-control" id="InputCodigo" value="1232312">
                         </div>
                     </div>
                     <div class="col-8">
-                        <form>
-                            <div class="form-group">
-                              <label for="formControlRange">Distancia(Km)</label>
-                              <input type="range" class="form-control-range" id="formControlRange">
-                            </div>
-                          </form>
+                      <div class="form-group">
+                        <label for="formControlRange" class="font-weight-bold" id="formControlRangeLabel" >Distancia(Km): 10</label>
+                        <input type="range" class="form-control-range custom-range" id="formControlRange" value="10" min="1" max="20">
+                      </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-12">
                         <div class="form-group">
-                            <label for="exampleFormControlSelect1">Actividad Economica</label>
-                            <select class="form-control" id="exampleFormControlSelect1">
+                            <label for="FormControlSelectActividad" class="font-weight-bold">Actividad Economica</label>
+                            <select class="form-control" id="FormControlSelectActividad">
                               <option>Tiendas de conveniencia</option>
                               <option>Tiendas super 7 y gasolineras</option>
                               <option>Oxxos</option>
@@ -90,5 +88,22 @@
   </div>
 
 
-{% endblock %}
+  <script>
+    document.getElementById('formControlRange').addEventListener('input', function () {
+      document.getElementById('formControlRangeLabel').textContent = "Distancia(Km): " + this.value;
+    });
 
+    var codigoPostal = document.getElementById('InputCodigo')
+    console.log("Codigo: " + codigoPostal.value);
+
+    document.getElementById('InputCodigo').addEventListener('input', function () {
+      console.log("Codigo: " + this.value);
+    });
+
+    document.getElementById('FormControlSelectActividad').addEventListener('input', function () {
+      console.log("Actividad economica:" + this.value);
+    });
+
+  </script>
+
+{% endblock %}
