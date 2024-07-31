@@ -16,14 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from GeoComercioExplorer.views import HomePage, DashBoard, Contacto
-from django.conf import settings
-from django.conf.urls.static import static
+from GeoComercioExplorer import views
+from GeoComercioExplorer.views import HomePage, DashBoard, Contacto, Get_actividades
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', HomePage),
     path('dashboard', DashBoard),
-    path('contacto', Contacto)
+    path('contacto', Contacto),
+    path('get_actividades/<str:codigo_postal>/', views.Get_actividades, name='get_actividades')
 
 ]

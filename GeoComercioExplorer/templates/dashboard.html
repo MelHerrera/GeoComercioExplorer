@@ -54,7 +54,7 @@
                     <div class="col-4">
                         <div class="form-group">
                             <label for="InputCodigo" class="font-weight-bold">Código Postal</label>
-                            <input type="text" class="form-control" id="InputCodigo" value="1232312">
+                            <input type="text" class="form-control" id="InputCodigo" value="01000">
                         </div>
                     </div>
                     <div class="col-8">
@@ -103,6 +103,23 @@
     document.getElementById('FormControlSelectActividad').addEventListener('input', function () {
       console.log("Actividad economica:" + this.value);
     });
+
+  window.addEventListener('load', () => {
+    getActividadesEconomicas();
+  });
+
+  function getActividadesEconomicas(){
+    var codigoPostal = document.getElementById('InputCodigo')?.value
+
+    fetch(`/get_actividades/${codigoPostal}/`)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+  }
 
   </script>
 
