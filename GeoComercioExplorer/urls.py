@@ -24,6 +24,6 @@ urlpatterns = [
     path('', HomePage),
     path('dashboard', DashBoard),
     path('contacto', Contacto),
-    path('get_actividades/<str:codigo_postal>/', views.Get_actividades, name='get_actividades')
+    path('get_actividades/<str:codigo_postal>/<str:radio>/', views.Get_actividades, name='get_actividades')
 
 ]

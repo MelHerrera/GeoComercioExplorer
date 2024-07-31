@@ -4,10 +4,13 @@ from pyspark.sql import SparkSession
 from django.http import JsonResponse
 from pyspark.sql import functions as F
 from pyspark.sql.types import IntegerType, DoubleType
+from geopy.distance import geodesic
+from geopy.geocoders import Nominatim
 
 def initSparkApp(name):
     return SparkSession.builder.appName(name).getOrCreate()
 
+negocios_radio = None
 spark = initSparkApp("GeoApp")
 
 data_path = "GeoComercioExplorer\content\CPdescarga.csv"
@@ -40,17 +43,45 @@ def DashBoard(request):
     # Renderizar el resultado en una plantilla
     return render(request, 'dashboard.html', {'top_5_data': top_5_data})
 
-def Get_actividades(request,codigo_postal):
+def Get_actividades(request,codigo_postal, radio):
     codigo_buscado = df.select(F.col("d_codigo").alias("CP"),
                                 F.col("Latitud"),
                                 F.col("Longitud"),
                                 F.col("c_estado")
                                 ).filter(
                                     F.col("d_codigo") == codigo_postal
-                                )
+                                ).toPandas()
     
-    codigo_buscado_list = codigo_buscado.collect()
-    codigo_buscado_data = [row.asDict() for row in codigo_buscado_list]
+    data = []
+
+    lat1 = float(codigo_buscado.Latitud[0])
+    lon1 = float(codigo_buscado.Longitud[0])
+    distancia_km = float(radio)
+
+    for row in df.toLocalIterator():
+        lat2 = row["Latitud"]
+        lon2 = row["Longitud"]
+
+        resultado = geodesic((lat1, lon1), (lat2, lon2))
+
+        if resultado <= distancia_km:
+            data.append((row.d_codigo,row.Latitud,row.Longitud,row.c_estado))
+
     
-    data = { 'Message': 'Operacion Exitosa!', 'code1':codigo_buscado_data}
+    # Columnas del DataFrame
+    columns = ["CP", "Latitud", "Longitud","Entidad_fed"]
+    negocios_radio = spark.createDataFrame(data, columns)
+    negocios_radio.cache()
+
+    #seleccionamos los valores distintos de entidad federativa y los asignamos a la variable estados
+    estados = negocios_radio.select(F.col("Entidad_fed")).distinct().toPandas()
+
+    # codigo_buscado_list = codigo_buscado.values.tolist()
+    codigo_buscado_data = codigo_buscado.to_dict(orient='records')
+    
+    data = { 
+        'Message': 'Operacion Exitosa!',
+          'codigo_buscado_data':codigo_buscado_data, 
+          'radio':radio
+    }
     return JsonResponse(data)

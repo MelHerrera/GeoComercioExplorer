@@ -110,8 +110,9 @@
 
   function getActividadesEconomicas(){
     var codigoPostal = document.getElementById('InputCodigo')?.value
+    var radio = document.getElementById('formControlRange')?.value
 
-    fetch(`/get_actividades/${codigoPostal}/`)
+    fetch(`/get_actividades/${codigoPostal}/${radio}/`)
             .then(response => response.json())
             .then(data => {
                 console.log(data);
