@@ -4,3 +4,5 @@ Esta herramienta facilita a los usuarios la búsqueda y filtrado de información
 * Dtección de competencia
 * Identificación de lugares de ocio
 * Visualización de oportunidades comerciales
+
+Descarga Masiva INEGI: https://www.inegi.org.mx/app/descarga/
