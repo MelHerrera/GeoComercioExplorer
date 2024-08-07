@@ -3,27 +3,110 @@ from django.shortcuts import render
 from pyspark.sql import SparkSession
 from django.http import JsonResponse
 from pyspark.sql import functions as F
-from pyspark.sql.types import IntegerType, DoubleType
+from pyspark.sql.types import IntegerType, DoubleType, LongType, StringType,StructField,StructType
 from geopy.distance import geodesic
 from geopy.geocoders import Nominatim
+import os
+import sys
+from sedona.register import SedonaRegistrator
+from sedona.utils import SedonaKryoRegistrator, KryoSerializer
+from sedona.sql.types import GeometryType
+
+os.environ['PYSPARK_PYTHON'] = sys.executable
 
 def initSparkApp(name):
-    return SparkSession.builder.appName(name).getOrCreate()
+    return SparkSession.builder \
+        .appName(name). \
+config("spark.serializer", KryoSerializer.getName). \
+config("spark.kryo.registrator", SedonaKryoRegistrator.getName). \
+config('spark.jars.packages',
+           'org.apache.sedona:sedona-python-adapter-3.0_2.12:1.2.0-incubating,'
+           'org.datasyslab:geotools-wrapper:1.1.0-25.2') \
+        .getOrCreate()
 
-negocios_radio = None
-spark = initSparkApp("GeoApp")
+# negocios_radio = None
+# bd_denue = None
+spark = initSparkApp("GeoBigData")
+SedonaRegistrator.registerAll(spark)
 
-data_path = "GeoComercioExplorer\content\CPdescarga.csv"
-df = spark.read.csv(data_path, header=True, inferSchema=True)
+schema = StructType([
+    StructField("id", LongType(), True),
+    StructField("clee", StringType(), True),
+    StructField("nom_estab", StringType(), True),
+    StructField("raz_social", StringType(), True),
+    StructField("codigo_act", StringType(), True),
+    StructField("nombre_act", StringType(), True),
+    StructField("per_ocu", StringType(), True),
+    StructField("tipo_vial", StringType(), True),
+    StructField("nom_vial", StringType(), True),
+    StructField("tipo_v_e_1", StringType(), True),
+    StructField("nom_v_e_1", StringType(), True),
+    StructField("tipo_v_e_2", StringType(), True),
+    StructField("nom_v_e_2", StringType(), True),
+    StructField("tipo_v_e_3", StringType(), True),
+    StructField("nom_v_e_3", StringType(), True),
+    StructField("numero_ext", StringType(), True),
+    StructField("letra_ext", StringType(), True),
+    StructField("edificio", StringType(), True),
+    StructField("edificio_e", StringType(), True),
+    StructField("numero_int", StringType(), True),
+    StructField("letra_int", StringType(), True),
+    StructField("tipo_asent", StringType(), True),
+    StructField("nomb_asent", StringType(), True),
+    StructField("tipoCenCom", StringType(), True),
+    StructField("nom_CenCom", StringType(), True),
+    StructField("num_local", StringType(), True),
+    StructField("cod_postal", StringType(), True),
+    StructField("cve_ent", StringType(), True),
+    StructField("entidad", StringType(), True),
+    StructField("cve_mun", StringType(), True),
+    StructField("municipio", StringType(), True),
+    StructField("cve_loc", StringType(), True),
+    StructField("localidad", StringType(), True),
+    StructField("ageb", StringType(), True),
+    StructField("manzana", StringType(), True),
+    StructField("telefono", StringType(), True),
+    StructField("correoelec", StringType(), True),
+    StructField("www", StringType(), True),
+    StructField("tipoUniEco", StringType(), True),
+    StructField("latitud", DoubleType(), True),
+    StructField("longitud", DoubleType(), True),
+    StructField("fecha_alta", StringType(), True),
+    StructField("geometry", GeometryType(), True)
+])
+
+bd_denue = spark.read.schema(schema).parquet("GeoComercioExplorer/content/DENUE_Parquets/01.parquet")
+
+# data_path = "GeoComercioExplorer\content\CPdescarga.csv"
+# df = spark.read.csv(data_path, header=True, inferSchema=True)
     
-# Corregir el tipo de dato de codigo y estado
-columnas_corregir = ["d_codigo", "c_estado"]
+# # Corregir el tipo de dato de codigo y estado
+# columnas_corregir = ["d_codigo", "c_estado"]
 
-for c in columnas_corregir:
-    df = df.withColumn(c, F.col(c).cast(IntegerType()))
+# for c in columnas_corregir:
+#     df = df.withColumn(c, F.col(c).cast(IntegerType()))
 
-# agregar las transformaciones a la cache
-df.cache()
+# # agregar las transformaciones a la cache
+# df.cache()
+
+
+# data_testing =[("James ","","Smith","36636","M",3000),
+#               ("Michael ","Rose","","40288","M",4000),
+#               ("Robert ","","Williams","42114","M",4000),
+#               ("Maria ","Anne","Jones","39192","F",4000),
+#               ("Jen","Mary","Brown","","F",-1)]
+# columns=["firstname","middlename","lastname","dob","gender","salary"]
+# df_parquet=spark.createDataFrame(data_testing,columns)
+# df_parquet.write.mode("overwrite").parquet("/tmp/output/p.parquet")
+
+# df_final = spark.read.parquet("/tmp/output/p.parquet")
+
+
+# Depurando
+try:
+    print(bd_denue.count())
+except Exception as e:
+    print("Error:", e)
 
 
 def HomePage(request):
@@ -34,10 +117,9 @@ def Contacto(request):
 
 def DashBoard(request):
     ##mostrar el top 5
-    top_5_df = df.limit(5)
+    top_5_list = df.limit(5).collect()
 
     # Convertir a una lista de diccionarios para pasar a la plantilla
-    top_5_list = top_5_df.collect()
     top_5_data = [row.asDict() for row in top_5_list]
 
     # Renderizar el resultado en una plantilla
@@ -75,8 +157,17 @@ def Get_actividades(request,codigo_postal, radio):
 
     #seleccionamos los valores distintos de entidad federativa y los asignamos a la variable estados
     estados = negocios_radio.select(F.col("Entidad_fed")).distinct().toPandas()
+    # bd_denue = load_parquetby_estado(estados)
+    # bd_denue_path = f"GeoComercioExplorer/content/DENUE_Parquets/0{estados.Entidad_fed[0]}.parquet"
+    bd_denue = spark.read.parquet(f"C:\tmp\output\p.parquet")
 
-    # codigo_buscado_list = codigo_buscado.values.tolist()
+    # Depurando
+    try:
+        # print(bd_denue_path)
+        print(bd_denue.count())
+    except Exception as e:
+        print("Error:", e)
+
     codigo_buscado_data = codigo_buscado.to_dict(orient='records')
     
     data = { 
@@ -85,3 +176,30 @@ def Get_actividades(request,codigo_postal, radio):
           'radio':radio
     }
     return JsonResponse(data)
+
+def load_parquetby_estado(estados):
+    if estados.Entidad_fed[0] == 15:
+        BD_DENUE = spark.read.parquet(f"GeoComercioExplorer/content/DENUE_Parquets/{estados.Entidad_fed[0]}_1.parquet")
+        BD_DENUE1 = spark.read.parquet(f"GeoComercioExplorer/content/DENUE_Parquets/{estados.Entidad_fed[0]}_2.parquet")
+        BD_DENUE = BD_DENUE.union(BD_DENUE1)
+    else:
+        if estados.Entidad_fed[0]<10:
+            BD_DENUE = spark.read.parquet(f"GeoComercioExplorer/content/DENUE_Parquets/0{estados.Entidad_fed[0]}.parquet")
+        else:
+            BD_DENUE = spark.read.parquet(f"GeoComercioExplorer/content/DENUE_Parquets/{estados.Entidad_fed[0]}.parquet")
+
+    for estado in estados.Entidad_fed[1:]:
+        if estado == 15:
+            BD_DENUE1 = spark.read.parquet(f"GeoComercioExplorer/content/DENUE_Parquets/{estado}_1.parquet")
+            BD_DENUE = BD_DENUE.union(BD_DENUE1)
+            BD_DENUE1 = spark.read.parquet(f"GeoComercioExplorer/content/DENUE_Parquets/{estado}_2.parquet")
+            BD_DENUE = BD_DENUE.union(BD_DENUE1)
+        else:
+            if estado<10:
+                BD_DENUE1 = spark.read.parquet(f"GeoComercioExplorer/content/DENUE_Parquets/0{estado}.parquet")
+                BD_DENUE = BD_DENUE.union(BD_DENUE1)
+            else:
+                BD_DENUE1 = spark.read.parquet(f"GeoComercioExplorer/content/DENUE_Parquets/{estado}.parquet")
+                BD_DENUE = BD_DENUE.union(BD_DENUE1)
+                
+    return BD_DENUE
