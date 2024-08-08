@@ -3,6 +3,13 @@
 {% block content %}
 {% load static %}
 
+<style>
+  #folium_map {
+      width: 100%;
+      height: 600px;
+  }
+</style>
+
 <div class="container mt-3">
     <div class="row">
       <div class="col-3">
@@ -68,15 +75,17 @@
                     <div class="col-12">
                         <div class="form-group">
                             <label for="FormControlSelectActividad" class="font-weight-bold">Actividad Economica</label>
-                            <select class="form-control" id="FormControlSelectActividad">
-                              <option>Tiendas de conveniencia</option>
-                              <option>Tiendas super 7 y gasolineras</option>
-                              <option>Oxxos</option>
-                              <option>Comiderias de tacos</option>
-                            </select>
+                            <input type="text" class="form-control" id="FormControlSelectActividad" value="michoacana">
                           </div>
                     </div>
                 </div>
+                <row>
+                  <div class="col">
+                    <div id="folium_map">
+                      {{ map_html|safe }}
+                    </div>
+                  </div>
+                </row>
             </form>
           </div>
           <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
@@ -111,11 +120,13 @@
   function getActividadesEconomicas(){
     var codigoPostal = document.getElementById('InputCodigo')?.value
     var radio = document.getElementById('formControlRange')?.value
+    var actividad_to_search = document.getElementById('FormControlSelectActividad')?.value
 
-    fetch(`/get_actividades/${codigoPostal}/${radio}/`)
+    fetch(`/get_actividades/${codigoPostal}/${radio}/${actividad_to_search}`)
             .then(response => response.json())
             .then(data => {
                 console.log(data);
+                document.getElementById('folium_map').innerHTML = data.map_html;
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
