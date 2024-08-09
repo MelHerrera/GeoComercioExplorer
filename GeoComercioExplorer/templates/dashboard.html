@@ -7,11 +7,12 @@
   #folium_map {
       width: 100%;
   }
+
 </style>
 
 <div class="container mt-3">
     <div class="row">
-      <div class="col-3">
+      <div class="col-2">
         <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
           <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">
             <i class="bi bi-house"></i>
@@ -27,7 +28,7 @@
         </a>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-10">
         <div class="tab-content" id="v-pills-tabContent">
           <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
 
@@ -71,11 +72,17 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-8">
                         <div class="form-group">
                             <label for="FormControlSelectActividad" class="font-weight-bold">Actividad Economica</label>
                             <input type="text" class="form-control" id="FormControlSelectActividad" value="michoacana">
                           </div>
+                    </div>
+                    <div class="col-4 d-flex align-items-center">
+                      <button id="btn-limpiar" type="button" class="btn btn-secondary mr-2">Limpiar</button>
+                      <button id="btn-procesar" type="button" class="btn btn-primary" onclick="getActividadesEconomicas()">
+                        Procesar
+                      </button>
                     </div>
                 </div>
                 <row>
@@ -111,14 +118,46 @@
       console.log("Actividad economica:" + this.value);
     });
 
-  window.addEventListener('load', () => {
-    getActividadesEconomicas();
-  });
+function disableFormButtons(){
+    console.log("disabling");
+    document.getElementById('InputCodigo').disabled = true
+    document.getElementById('formControlRange').disabled = true
+    document.getElementById('FormControlSelectActividad').disabled = true
+    document.getElementById('btn-limpiar').disabled = true
+    document.getElementById('btn-procesar').disabled = true
+}
+
+function enableFormButtons(){
+    console.log("disabling");
+    document.getElementById('InputCodigo').disabled = false
+    document.getElementById('formControlRange').disabled = false
+    document.getElementById('FormControlSelectActividad').disabled = false
+    document.getElementById('btn-limpiar').disabled = false
+    document.getElementById('btn-procesar').disabled = false
+}
+
+function toggleSpan() {
+  var span = document.getElementById('btn-procesar-progress');
+  var button = document.getElementById('btn-procesar');
+
+    if (!span) {
+      span = document.createElement('span');
+      span.id = 'btn-procesar-progress';
+      span.classList = 'spinner-border spinner-border-sm text-secondary';
+      button.appendChild(span);
+    } else {
+      span.remove();
+    }
+}
+
 
   function getActividadesEconomicas(){
     var codigoPostal = document.getElementById('InputCodigo')?.value
     var radio = document.getElementById('formControlRange')?.value
     var actividad_to_search = document.getElementById('FormControlSelectActividad')?.value
+
+    disableFormButtons();
+    toggleSpan();
 
     fetch(`/get_actividades/${codigoPostal}/${radio}/${actividad_to_search}`)
             .then(response => response.json())
@@ -129,6 +168,8 @@
                 //   iniciarMap("folium_map",data.map_html.markers_comercios,data.map_html.markers_competencia, data.map_html.markers_comercios_radio, data.map_html.lat1, data.map_html.lon1, radio );
                 // });
                 console.log(data)
+                enableFormButtons()
+                toggleSpan()
             })
             .catch(error => {
                 console.error('Error fetching data:', error);

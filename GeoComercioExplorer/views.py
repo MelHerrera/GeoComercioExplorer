@@ -290,7 +290,7 @@ def load_parquetby_estado(estados):
 
 
 def getfolium_map(lat_center,long_center,distance_km, postal_code,comercios_radio, comercios_competidores):
-    m3 = folium.Map(location=[lat_center,long_center], zoom_start=13)
+    m3 = folium.Map(location=[lat_center,long_center], zoom_start=12)
 
     folium.Choropleth(
     geo_data=comercios_radio.to_json(drop_id=True),
