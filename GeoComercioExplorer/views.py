@@ -33,55 +33,9 @@ config('spark.jars.packages',
 spark = initSparkApp("GeoBigData")
 SedonaRegistrator.registerAll(spark)
 
-# # schema = StructType([
-#     StructField("id", LongType(), True),
-#     StructField("clee", StringType(), True),
-#     StructField("nom_estab", StringType(), True),
-#     StructField("raz_social", StringType(), True),
-#     StructField("codigo_act", StringType(), True),
-#     StructField("nombre_act", StringType(), True),
-#     StructField("per_ocu", StringType(), True),
-#     StructField("tipo_vial", StringType(), True),
-#     StructField("nom_vial", StringType(), True),
-#     StructField("tipo_v_e_1", StringType(), True),
-#     StructField("nom_v_e_1", StringType(), True),
-#     StructField("tipo_v_e_2", StringType(), True),
-#     StructField("nom_v_e_2", StringType(), True),
-#     StructField("tipo_v_e_3", StringType(), True),
-#     StructField("nom_v_e_3", StringType(), True),
-#     StructField("numero_ext", StringType(), True),
-#     StructField("letra_ext", StringType(), True),
-#     StructField("edificio", StringType(), True),
-#     StructField("edificio_e", StringType(), True),
-#     StructField("numero_int", StringType(), True),
-#     StructField("letra_int", StringType(), True),
-#     StructField("tipo_asent", StringType(), True),
-#     StructField("nomb_asent", StringType(), True),
-#     StructField("tipoCenCom", StringType(), True),
-#     StructField("nom_CenCom", StringType(), True),
-#     StructField("num_local", StringType(), True),
-#     StructField("cod_postal", StringType(), True),
-#     StructField("cve_ent", StringType(), True),
-#     StructField("entidad", StringType(), True),
-#     StructField("cve_mun", StringType(), True),
-#     StructField("municipio", StringType(), True),
-#     StructField("cve_loc", StringType(), True),
-#     StructField("localidad", StringType(), True),
-#     StructField("ageb", StringType(), True),
-#     StructField("manzana", StringType(), True),
-#     StructField("telefono", StringType(), True),
-#     StructField("correoelec", StringType(), True),
-#     StructField("www", StringType(), True),
-#     StructField("tipoUniEco", StringType(), True),
-#     StructField("latitud", DoubleType(), True),
-#     StructField("longitud", DoubleType(), True),
-#     StructField("fecha_alta", StringType(), True),
-#     StructField("geometry", GeometryType(), True)
-# ])
 
-# bd_denue = spark.read.schema(schema).parquet("GeoComercioExplorer/content/DENUE_Parquets/01.parquet")
-
-data_path = "GeoComercioExplorer\content\CPdescarga.csv"
+# data_path = "GeoComercioExplorer\content\CPdescarga.csv"
+data_path = os.path.join("GeoComercioExplorer", "content", "CPdescarga.csv")
 df = spark.read.csv(data_path, header=True, inferSchema=True)
     
 # Corregir el tipo de dato de codigo y estado
@@ -92,26 +46,6 @@ for c in columnas_corregir:
 
 # agregar las transformaciones a la cache
 df.cache()
-
-
-# data_testing =[("James ","","Smith","36636","M",3000),
-#               ("Michael ","Rose","","40288","M",4000),
-#               ("Robert ","","Williams","42114","M",4000),
-#               ("Maria ","Anne","Jones","39192","F",4000),
-#               ("Jen","Mary","Brown","","F",-1)]
-# columns=["firstname","middlename","lastname","dob","gender","salary"]
-# df_parquet=spark.createDataFrame(data_testing,columns)
-# df_parquet.write.mode("overwrite").parquet("/tmp/output/p.parquet")
-
-# df_final = spark.read.parquet("/tmp/output/p.parquet")
-
-
-# Depurando
-# try:
-#     print(bd_denue.count())
-# except Exception as e:
-#     print("Error:", e)
-
 
 def HomePage(request):
     return render(request, "home.html")
