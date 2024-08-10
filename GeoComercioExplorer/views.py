@@ -215,7 +215,7 @@ def Get_actividades(request,codigo_postal, radio, actividad_to_search):
     comerciosB_SHP = comerciosB_SHP.to_crs("EPSG:4326")
 
     # Mapa con folum
-    map_html = getfolium_map(lat1, lon1, distancia_km, codigo_postal, comercios_SHP, comerciosB_SHP)
+    map_foliumhtml = getfolium_map(lat1, lon1, distancia_km, codigo_postal, comercios_SHP, comerciosB_SHP)
 
     # Mapa con google maps
     markers_comercios = "["
@@ -245,19 +245,19 @@ def Get_actividades(request,codigo_postal, radio, actividad_to_search):
 
     # Convertir a una lista de diccionarios para pasar a la plantilla
     codigo_buscado_data = codigo_buscado.to_dict(orient='records')
-    
+
     data = { 
         'Message': 'Operacion Exitosa!',
           'codigo_buscado_data':codigo_buscado_data, 
           'radio':radio,
-          'map_html':map_html
-        #   'map_html': {
-        #       'lat1':lat1,
-        #       'lon1':lon1,
-        #       'markers_comercios':markers_comercios,
-        #       'markers_competencia':markers_competencia,
-        #       'markers_comercios_radio':markers_comercios_radio
-        #   }
+          'map_foliumhtml':map_foliumhtml,
+          'map_html': {
+              'lat1':lat1,
+              'lon1':lon1,
+              'markers_comercios':markers_comercios,
+              'markers_competencia':markers_competencia,
+              'markers_comercios_radio':markers_comercios_radio
+          }
     }
     return JsonResponse(data)
 

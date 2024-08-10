@@ -4,141 +4,258 @@
 {% load static %}
 
 <style>
-  #folium_map {
-      width: 100%;
+  #my_map {
+    width: 100%;
   }
-
 </style>
 
 <div class="container mt-3">
-    <div class="row">
-      <div class="col-2">
-        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-          <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">
-            <i class="bi bi-house"></i>
-            Dashboard
+  <div class="row">
+    <div class="col-2">
+      <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+        <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab"
+          aria-controls="v-pills-home" aria-selected="true">
+          <i class="bi bi-house"></i>
+          Dashboard
         </a>
-          <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">
-            <i class="bi bi-clipboard2-data"></i>
-            GeoComerce
+        <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab"
+          aria-controls="v-pills-profile" aria-selected="false">
+          <i class="bi bi-clipboard2-data"></i>
+          GeoComerce
         </a>
-          <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false">
-            <i class="bi bi-sliders"></i>
-            Configuración
+        <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab"
+          aria-controls="v-pills-settings" aria-selected="false">
+          <i class="bi bi-sliders"></i>
+          Configuración
         </a>
-        </div>
       </div>
-      <div class="col-10">
-        <div class="tab-content" id="v-pills-tabContent">
-          <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+    </div>
+    <div class="col-10">
+      <div class="tab-content" id="v-pills-tabContent">
+        <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
 
-                    <table class="table">
-                        <thead class="bg-primary text-white">
-                          <tr>
-                            <th scope="col">Código</th>
-                            <th scope="col">Latitud</th>
-                            <th scope="col">Longitud</th>
-                            <th scope="col">Estado</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                            {% for row in top_5_data %}
-                            <tr>
-                                <td>{{ row.d_codigo }}</td>
-                                <td>{{ row.Latitud }}</td>
-                                <td>{{ row.Longitud }}</td>
-                                <td>{{ row.c_estado }}</td>
-                            <tr>
-                            {% endfor %}
-                        </tbody>
-                      </table>
+          <table class="table">
+            <thead class="bg-primary text-white">
+              <tr>
+                <th scope="col">Código</th>
+                <th scope="col">Latitud</th>
+                <th scope="col">Longitud</th>
+                <th scope="col">Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in top_5_data %}
+              <tr>
+                <td>{{ row.d_codigo }}</td>
+                <td>{{ row.Latitud }}</td>
+                <td>{{ row.Longitud }}</td>
+                <td>{{ row.c_estado }}</td>
+              <tr>
+                {% endfor %}
+            </tbody>
+          </table>
 
 
         </div>
-          <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
-            <form>
-                <div class="row">
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label for="InputCodigo" class="font-weight-bold">Código Postal</label>
-                            <input type="text" class="form-control" id="InputCodigo" value="01000">
-                        </div>
-                    </div>
-                    <div class="col-8">
-                      <div class="form-group">
-                        <label for="formControlRange" class="font-weight-bold" id="formControlRangeLabel" >Distancia(Km): 10</label>
-                        <input type="range" class="form-control-range custom-range" id="formControlRange" value="10" min="1" max="20">
-                      </div>
-                    </div>
+        <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+          <form>
+            <div class="row">
+              <div class="col-4">
+                <div class="form-group">
+                  <label for="InputCodigo" class="font-weight-bold">Código Postal</label>
+                  <input type="text" class="form-control" id="InputCodigo" value="01000">
                 </div>
-                <div class="row">
-                    <div class="col-8">
-                        <div class="form-group">
-                            <label for="FormControlSelectActividad" class="font-weight-bold">Actividad Economica</label>
-                            <input type="text" class="form-control" id="FormControlSelectActividad" value="michoacana">
-                          </div>
-                    </div>
-                    <div class="col-4 d-flex align-items-center">
-                      <button id="btn-limpiar" type="button" class="btn btn-secondary mr-2">Limpiar</button>
-                      <button id="btn-procesar" type="button" class="btn btn-primary" onclick="getActividadesEconomicas()">
-                        Procesar
-                      </button>
-                    </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <label for="formControlRange" class="font-weight-bold" id="formControlRangeLabel">Distancia(Km):
+                    10</label>
+                  <input type="range" class="form-control-range custom-range" id="formControlRange" value="10" min="1"
+                    max="20">
                 </div>
-                <row>
-                  <div class="col">
-                    <div id="folium_map">
-                      {{ map_html|safe }}
-                    </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-8">
+                <div class="form-group">
+                  <label for="FormControlSelectActividad" class="font-weight-bold">Actividad Economica</label>
+                  <input type="text" class="form-control" id="FormControlSelectActividad" value="michoacana">
+                </div>
+              </div>
+              <div class="col-4 d-flex align-items-center">
+                <button id="btn-limpiar" type="button" class="btn btn-secondary mr-2"
+                  onclick="limpiarForm()">Limpiar</button>
+                <button id="btn-procesar" type="button" class="btn btn-primary" onclick="getActividadesEconomicas()">
+                  Procesar
+                </button>
+              </div>
+            </div>
+            <!--Animacion Cargando-->
+            <div id="loading-anim" class="row justify-content-center d-none">
+              <div class="col-2">
+                      <lottie-player src="{% static 'vendor/lottie/raw/underconstruction.json' %}" 
+                          background="transparent"  
+                          speed="1"  
+                          style="width: 300px; height: 300px;" 
+                          loop autoplay>
+                      </lottie-player>
+              </div>
+          </div>
+            <!--Visualization content-->
+            <div id="visualization-content" class="row d-none">
+              <div class="col">
+                <div class="container">
+                  <div class="text-center">
+                  <!-- Radio buttons group -->
+                  <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
+                    <label class="btn btn-primary active">
+                      <input type="radio" name="options" id="option1" autocomplete="off" checked> Google Map
+                    </label>
+                    <label class="btn btn-secondary">
+                      <input type="radio" name="options" id="option2" autocomplete="off"> Folium
+                    </label>
                   </div>
-                </row>
-            </form>
-          </div>
-          <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
-            Settings content...
-          </div>
+                
+                  <!-- Content for Option 1 -->
+                  <div id="content1" class="mt-3">
+                        <div id="my_map" style="height: 500px; width: 100%;"></div>
+                  </div>
+                
+                  <!-- Content for Option 2 -->
+                  <div id="content2" class="mt-3" style="display: none;">
+                    <div id="my_foliummap" style="height: 500px; width: 100%;"></div>
+                  </div>
+                </div>
+                </div>
+              </div>
+            </row>
+          </form>
+        </div>
+        <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
+          perro 3
         </div>
       </div>
     </div>
   </div>
+</div>
 
-  <script>
-    document.getElementById('formControlRange').addEventListener('input', function () {
-      document.getElementById('formControlRangeLabel').textContent = "Distancia(Km): " + this.value;
+<!-- Template validation errors-->
+<div class="toast" id="successToast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000" style="position: fixed; top: 20px; right: 20px;">
+  <div class="toast-header">
+    <strong class="mr-auto text-danger">
+      <i class="bi bi-exclamation-triangle-fill"></i>
+      Error
+    </strong>
+    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="toast-body" id="toastBody">
+    <!-- Validation error message will inserted here prix -->
+  </div>
+</div>
+
+<script>
+  document.getElementById('formControlRange').addEventListener('input', function () {
+    document.getElementById('formControlRangeLabel').textContent = "Distancia(Km): " + this.value;
+  });
+
+  function showVisualization(){
+    var visual = document.getElementById('visualization-content');
+    visual.classList.add('d-inline');
+  }
+
+  function hideVisualization(){
+    var visual = document.getElementById('visualization-content');
+    visual.classList.add('d-none');
+  }
+
+
+  function showToast(message) {
+    // Set the body message of the toast
+    var toastBody = document.getElementById('toastBody');
+    toastBody.textContent = message;
+
+    // Show the toast
+    var toastElement = document.getElementById('successToast');
+    var toast = new bootstrap.Toast(toastElement);
+    toast.show();
+  }
+
+  window.addEventListener("load", (e) => {
+    var option1 = document.getElementById('option1');
+    var option2 = document.getElementById('option2');
+    var content1 = document.getElementById('content1');
+    var content2 = document.getElementById('content2');
+    
+    // Function to toggle content based on selected radio button
+    function toggleContent() {
+        if (option1.checked) {
+            content1.style.display = 'block';
+            content2.style.display = 'none';
+        } else if (option2.checked) {
+            content1.style.display = 'none';
+            content2.style.display = 'block';
+        }
+    }
+    
+    // Event listeners for labels (not just the input elements)
+    document.querySelectorAll('.btn-group-toggle .btn').forEach((label) => {
+        label.addEventListener('click', toggleContent);
     });
+    
+    // Initialize the content display based on the default selected option
+    toggleContent();
+});
 
-    var codigoPostal = document.getElementById('InputCodigo')
-    console.log("Codigo: " + codigoPostal.value);
-
-    document.getElementById('InputCodigo').addEventListener('input', function () {
-      console.log("Codigo: " + this.value);
-    });
-
-    document.getElementById('FormControlSelectActividad').addEventListener('input', function () {
-      console.log("Actividad economica:" + this.value);
-    });
-
-function disableFormButtons(){
-    console.log("disabling");
+  function disableFormButtons() {
     document.getElementById('InputCodigo').disabled = true
     document.getElementById('formControlRange').disabled = true
     document.getElementById('FormControlSelectActividad').disabled = true
     document.getElementById('btn-limpiar').disabled = true
     document.getElementById('btn-procesar').disabled = true
-}
+    document.getElementById('loading-anim').classList.remove('d-none');
+  }
 
-function enableFormButtons(){
-    console.log("disabling");
+  function enableFormButtons() {
     document.getElementById('InputCodigo').disabled = false
     document.getElementById('formControlRange').disabled = false
     document.getElementById('FormControlSelectActividad').disabled = false
     document.getElementById('btn-limpiar').disabled = false
     document.getElementById('btn-procesar').disabled = false
-}
+    document.getElementById('loading-anim').classList.add('d-none');
+  }
 
-function toggleSpan() {
-  var span = document.getElementById('btn-procesar-progress');
-  var button = document.getElementById('btn-procesar');
+  function limpiarForm() {
+    document.getElementById('InputCodigo').value = ""
+    document.getElementById('formControlRange').value = 10
+    document.getElementById('FormControlSelectActividad').value = ""
+    document.getElementById('formControlRangeLabel').textContent = "Distancia(Km): " + 10;
+  }
+
+  function validateForm() {
+    let valid = true;
+
+    var codigoPostal = document.getElementById('InputCodigo')?.value
+    var actividad_to_search = document.getElementById('FormControlSelectActividad')?.value
+
+    if (!codigoPostal) {
+      // alert("¡El código postal es requerido!");
+      showToast("¡El código postal es requerido!");
+      valid = false
+    }
+
+    if (!actividad_to_search) {
+      // alert("¡La actividad económica es requerida.!");
+      showToast("¡La actividad económica es requerida.!");
+      valid = false
+    }
+
+    return valid
+  }
+  function toggleSpan() {
+    var span = document.getElementById('btn-procesar-progress');
+    var button = document.getElementById('btn-procesar');
 
     if (!span) {
       span = document.createElement('span');
@@ -148,185 +265,203 @@ function toggleSpan() {
     } else {
       span.remove();
     }
-}
+  }
 
 
-  function getActividadesEconomicas(){
+  function getActividadesEconomicas() {
     var codigoPostal = document.getElementById('InputCodigo')?.value
     var radio = document.getElementById('formControlRange')?.value
     var actividad_to_search = document.getElementById('FormControlSelectActividad')?.value
 
-    disableFormButtons();
-    toggleSpan();
+    if (validateForm()) {
+      disableFormButtons();
+      hideVisualization();
+      toggleSpan();
 
-    fetch(`/get_actividades/${codigoPostal}/${radio}/${actividad_to_search}`)
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                document.getElementById('folium_map').innerHTML = data.map_html; //Folium
-                // loadGoogleMapsScript(() => {
-                //   iniciarMap("folium_map",data.map_html.markers_comercios,data.map_html.markers_competencia, data.map_html.markers_comercios_radio, data.map_html.lat1, data.map_html.lon1, radio );
-                // });
-                console.log(data)
-                enableFormButtons()
-                toggleSpan()
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-            });
+      fetch(`/get_actividades/${codigoPostal}/${radio}/${actividad_to_search}`)
+        .then(response => response.json())
+        .then(data => {
+          // show folium map
+          document.getElementById('my_foliummap').innerHTML = data.map_foliumhtml;
+          // show google map
+          initMap(
+            "my_map",
+            data.map_html.markers_comercios
+            , data.map_html.markers_competencia,
+            data.map_html.markers_comercios_radio,
+            data.map_html.lat1,
+            data.map_html.lon1,
+            radio
+          );
+          toggleSpan();
+          enableFormButtons();
+          showVisualization();
+        })
+        .catch(error => {
+          console.error('Error fetching data:', error);
+        });
+    }
   }
 
-  function loadGoogleMapsScript(callback) {
-            var script = document.createElement('script');
-            script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyANc8ljgqQMKc12NVrtzDqGw8mNyiP8PD0";
-            script.async = true;
-            script.onload = callback;
-            document.head.appendChild(script);
-        }
 
-  function iniciarMap(templateid, m_comercios, m_competencia, m_comercios, lat1, lon1,distancia_km) {  
-    // Coordenadas para los comercios buscados
-    var locationsGroup1 = JSON.parse(m_comercios);
+  function initMap(templateid, m_comercios, m_competencia, m_comercios_radio, lat, long, distancia_km) {
+    //Coordenadas para los comercios buscados
+    var locationsGroup1 = JSON.parse(m_comercios.replace(/(\w+):/g, '"$1":') // Enclose property names in double quotes
+      .replace(/'/g, '"')
+    );
 
     // Coordenadas para los comercios de la competencia
-    var locationsGroup2 = JSON.parse(m_competencia);
+    var locationsGroup2 = JSON.parse(m_competencia.replace(/(\w+):/g, '"$1":') // Enclose property names in double quotes
+      .replace(/'/g, '"')
+    );
 
     // Coordenadas de los códigos postales involucrados en el radio de búsqueda
-    var locationsGroupCP = JSON.parse(m_comercios);
+    var locationsGroupCP = JSON.parse(m_comercios_radio.replace(/(\w+):/g, '"$1":') // Enclose property names in double quotes
+      .replace(/'/g, '"')
+    );
 
-    // Crear el mapa centrado en el código postal proporcionado
-    var map = new google.maps.Map(document.getElementById(templateid), { 
-        zoom: 15, 
-        center: {lat: lat1, lng: lon1}
+    // La ubicación donde quieres colocar el marcador
+    var myLatLngIniciales = { lat: lat, lng: long };
+
+    // Crear un mapa centrado en la ubicación
+    var map = new google.maps.Map(document.getElementById(templateid), {
+      zoom: 12,
+      center: myLatLngIniciales
     });
 
-    // Añadir múltiples marcadores para los comercios buscados
-    locationsGroup1.forEach(function(location) { 
-        var marker = new google.maps.Marker({ 
-            position: {lat: location.lat, lng: location.lng}, 
-            map: map, 
-            title: 'CP ' + location.label + '\n' + location.title,  
-            label: { 
-                text: location.title, 
-                color: 'blue', 
-                fontSize: '10px', 
-                fontWeight: 'bold' 
-            }, 
-            icon: { 
-                url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png', 
-                scaledSize: new google.maps.Size(50, 50), // Escalar el tamaño del icono 
-                origin: new google.maps.Point(0, 0), // Origen del icono 
-                anchor: new google.maps.Point(25, 50) // Punto de anclaje del icono 
-            }, 
-            draggable: true,
-            animation: google.maps.Animation.DROP,
-            visible: true,
-            zIndex: 1,
-            clickable: true,
-            optimized: false
-        });
+    // Crear un marcador y posicionarlo en el mapa
+    var marker = new google.maps.Marker({
+      position: myLatLngIniciales,
+      map: map,
+      title: 'Aquí está tu marcador!'
+    });
 
-        // Añadir un evento para manejar el clic en el marcador
-        marker.addListener('click', function() {
-            alert(location.title);
-        });
+    //  Añadir múltiples marcadores para los comercios buscados
+    locationsGroup1.forEach(function (location) {
+      var marker = new google.maps.Marker({
+        position: { lat: location.lat, lng: location.lng },
+        map: map,
+        title: 'CP ' + location.label + '\n' + location.title,
+        label: {
+          text: location.title,
+          color: 'blue',
+          fontSize: '10px',
+          fontWeight: 'bold'
+        },
+        icon: {
+          url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+          scaledSize: new google.maps.Size(50, 50), // Escalar el tamaño del icono 
+          origin: new google.maps.Point(0, 0), // Origen del icono 
+          anchor: new google.maps.Point(25, 50) // Punto de anclaje del icono 
+        },
+        draggable: true,
+        animation: google.maps.Animation.DROP,
+        visible: true,
+        zIndex: 1,
+        clickable: true,
+        optimized: false
+      });
+
+      // Añadir un evento para manejar el clic en el marcador
+      marker.addListener('click', function () {
+        alert(location.title);
+      });
     });
 
     // Añadir múltiples marcadores para la competencia
-    locationsGroup2.forEach(function(location) { 
-        var marker = new google.maps.Marker({ 
-            position: {lat: location.lat, lng: location.lng}, 
-            map: map, 
-            title: 'CP ' + location.label + '\n' + location.title,  
-            label: { 
-                text: 'Competencia',  
-                color: 'red', 
-                fontSize: '10px', 
-                fontWeight: 'bold' 
-            }, 
-            icon: { 
-                url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png', 
-                scaledSize: new google.maps.Size(40, 40), // Escalar el tamaño del icono 
-                origin: new google.maps.Point(0, 0), // Origen del icono 
-                anchor: new google.maps.Point(25, 50) // Punto de anclaje del icono 
-            }, 
-            draggable: true,
-            animation: google.maps.Animation.DROP,
-            visible: true,
-            zIndex: 1,
-            clickable: true,
-            optimized: false
-        });
+    locationsGroup2.forEach(function (location) {
+      var marker = new google.maps.Marker({
+        position: { lat: location.lat, lng: location.lng },
+        map: map,
+        title: 'CP ' + location.label + '\n' + location.title,
+        label: {
+          text: 'Competencia',
+          color: 'red',
+          fontSize: '10px',
+          fontWeight: 'bold'
+        },
+        icon: {
+          url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
+          scaledSize: new google.maps.Size(40, 40), // Escalar el tamaño del icono 
+          origin: new google.maps.Point(0, 0), // Origen del icono 
+          anchor: new google.maps.Point(25, 50) // Punto de anclaje del icono 
+        },
+        draggable: true,
+        animation: google.maps.Animation.DROP,
+        visible: true,
+        zIndex: 1,
+        clickable: true,
+        optimized: false
+      });
 
-        // Añadir un evento para manejar el clic en el marcador
-        marker.addListener('click', function() {
-            alert(location.title);
-        });
+      // Añadir un evento para manejar el clic en el marcador
+      marker.addListener('click', function () {
+        alert(location.title);
+      });
     });
 
     // Añadir múltiples marcadores para los códigos postales involucrados en el radio de búsqueda
-    locationsGroupCP.forEach(function(location) {   
-        var marker = new google.maps.Marker({  
-            position: {lat: location.lat, lng: location.lng},  
-            map: map,  
-            title: location.title,   
-            label: {  
-                text: location.title,  
-                color: 'black',  
-                fontSize: '12px',  
-                fontWeight: 'bold'  
-            },  
-            icon: {  
-                url:  'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png',  
-                scaledSize: new google.maps.Size(40, 40), // Escalar el tamaño del icono  
-                origin: new google.maps.Point(0, 0), // Origen del icono  
-                anchor: new google.maps.Point(25, 50) // Punto de anclaje del icono   
-            },  
-            draggable: true,  
-            animation: google.maps.Animation.DROP, 
-            visible: true, 
-            zIndex: 1, 
-            clickable: true, 
-            optimized: false 
-        }); 
+    locationsGroupCP.forEach(function (location) {
+      var marker = new google.maps.Marker({
+        position: { lat: location.lat, lng: location.lng },
+        map: map,
+        title: location.title,
+        label: {
+          text: location.title,
+          color: 'black',
+          fontSize: '12px',
+          fontWeight: 'bold'
+        },
+        icon: {
+          url: 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png',
+          scaledSize: new google.maps.Size(40, 40), // Escalar el tamaño del icono  
+          origin: new google.maps.Point(0, 0), // Origen del icono  
+          anchor: new google.maps.Point(25, 50) // Punto de anclaje del icono   
+        },
+        draggable: true,
+        animation: google.maps.Animation.DROP,
+        visible: true,
+        zIndex: 1,
+        clickable: true,
+        optimized: false
+      });
 
-        // Añadir un evento para manejar el clic en el marcador 
-        marker.addListener('click', function() { 
-            alert(location.title); 
-        }); 
+      // Añadir un evento para manejar el clic en el marcador 
+      marker.addListener('click', function () {
+        alert(location.title);
+      });
     });
 
     // Crear el círculo con el CP buscado y la distancia de búsqueda
     var circleOptions = {
-        strokeColor: '#FF0000', 
-        strokeOpacity: 0.8, 
-        strokeWeight: 2, 
-        fillColor: '#FF0000', 
-        fillOpacity: 0.1,  
-        map: map,  
-        center: {lat: lat1, lng: lon1}, // Coordenadas del centro del círculo  
-        radius: distancia_km * 1000 // Radio en metros
+      strokeColor: '#FF0000',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: '#FF0000',
+      fillOpacity: 0.1,
+      map: map,
+      center: myLatLngIniciales, // Coordenadas del centro del círculo  
+      radius: distancia_km * 1000 // Radio en metros
     };
 
     // Crear el círculo y añadirlo al mapa
     var cityCircle = new google.maps.Circle(circleOptions);
 
     // Añadir múltiples círculos con los códigos postales involucrados. Se asume 1 km de radio de CP
-    locationsGroupCP.forEach(function(location) {  
-        var cityCircle = new google.maps.Circle({  
-            strokeColor: '#FF0000',  
-            strokeOpacity: 0.3,  
-            strokeWeight: 2,  
-            fillColor: '#FFFF00',  
-            fillOpacity: 0.1,   
-            map: map,   
-            center:  {lat: location.lat, lng: location.lng}, // Coordenadas del centro del círculo   
-            radius: 1000.0 // Radio en metros   
-        }); 
+    locationsGroupCP.forEach(function (location) {
+      var cityCircle = new google.maps.Circle({
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.3,
+        strokeWeight: 2,
+        fillColor: '#FFFF00',
+        fillOpacity: 0.1,
+        map: map,
+        center: { lat: location.lat, lng: location.lng }, // Coordenadas del centro del círculo   
+        radius: 1000.0 // Radio en metros   
+      });
     });
-}
 
-  </script>
-    <!-- <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyANc8ljgqQMKc12NVrtzDqGw8mNyiP8PD0&loading=async&callback=initMap"></script> -->
+  }
+</script>
 
 {% endblock %}
