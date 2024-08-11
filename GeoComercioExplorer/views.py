@@ -28,13 +28,9 @@ config('spark.jars.packages',
            'org.datasyslab:geotools-wrapper:1.1.0-25.2') \
         .getOrCreate()
 
-# negocios_radio = None
-# bd_denue = None
 spark = initSparkApp("GeoBigData")
 SedonaRegistrator.registerAll(spark)
 
-
-# data_path = "GeoComercioExplorer\content\CPdescarga.csv"
 data_path = os.path.join("GeoComercioExplorer", "content", "CPdescarga.csv")
 df = spark.read.csv(data_path, header=True, inferSchema=True)
     

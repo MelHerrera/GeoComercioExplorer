@@ -6,7 +6,6 @@
 <style>
   #folium_map {
       width: 100%;
-      height: 600px;
   }
 </style>
 
@@ -208,7 +207,7 @@
 
   function hideVisualization(){
     var visual = document.getElementById('visualization-content');
-    visual.classList.add('d-none');
+    visual.classList.remove('d-inline');
   }
 
 
